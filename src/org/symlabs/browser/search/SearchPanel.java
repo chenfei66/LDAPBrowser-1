@@ -1,0 +1,240 @@
+package org.symlabs.browser.search;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import org.apache.log4j.Logger;
+import org.symlabs.nodes.LDAPNode;
+import org.symlabs.search.SearchParams;
+
+/**
+ * <p>Titulo: SearchPanel </p>
+ * <p>Descripcion: Panel that manages the components needed to make a search. </p>
+ * <p>Copyright: Emilio Fernandez  2009</p>
+ * @author Emilio J. Fernandez Rey
+ * @version 1.0
+ * @id $Id: SearchPanel.java,v 1.5 2009-07-28 17:39:22 efernandez Exp $
+ */
+public class SearchPanel extends javax.swing.JPanel {
+
+    /**Attribute used to display the debug message*/
+    private static Logger logger = Logger.getLogger(SearchPanel.class);
+    /**Attribute that contains the string shown that identifies the Scope Base*/
+    private static final String SCOPE_BASE = "Scope BASE (Search base DN)";
+    /**Attribute that contains the string shown that identifies the Scope ONE*/
+    private static final String SCOPE_ONE = "Scope ONE (Search entries under the base DN)";
+    /**Attribute that contains the string shown that identifies the Scope SUB*/
+    private static final String SCOPE_SUB = "Scope SUB (Search base DN and all entries within its subtree)";
+    /**Attribute that contains all scopes.
+     * LDAPv2.SCOPE_BASE = 0 (search only the base DN), 
+     * LDAPv2.SCOPE_ONE = 1 (search only entries under the base DN),
+     * LDAPv2.SCOPE_SUB  = 2 (search the base DN and all entries within its subtree) */
+    private static final String[] SCOPES = new String[]{SCOPE_BASE, SCOPE_ONE, SCOPE_SUB};
+    /**Attribute that stores the ldap node*/
+    private LDAPNode ldapNode;
+
+    // <editor-fold defaultstate="collapsed" desc=" Getter and Setter Methods ">
+    public LDAPNode getLdapNode() {
+        return ldapNode;
+    }
+
+    public void setLdapNode(LDAPNode ldapNode) {
+        this.ldapNode = ldapNode;
+    }
+    /**Method that sets the values of the panel
+     * 
+     * @param params
+     */
+    public void setSearchParamsFromPanel(SearchParams params){
+        this.baseTextField.setText(params.getBase());
+        this.scopeComboBox.setSelectedIndex(params.getScope());
+        this.filterTextArea.setText(params.getFilter());
+    }
+    
+    /**MEthod that returns the search params contained in this panel
+     * 
+     * @return
+     */
+    public SearchParams getSearchParamsFromPanel(){
+        return new SearchParams(this.baseTextField.getText(),
+                this.scopeComboBox.getSelectedIndex(),
+                this.filterTextArea.getText());
+    }
+
+    public JTextField getBaseTextField() {
+        return baseTextField;
+    }
+
+    public JTextArea getFilterTextArea() {
+        return filterTextArea;
+    }
+
+    public JComboBox getScopeComboBox() {
+        return scopeComboBox;
+    }
+    
+    
+    // </editor-fold>
+    
+    /** Creates new form SearchPanel */
+    public SearchPanel() {
+        initComponents();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(SCOPES);
+        this.scopeComboBox.setModel(model);
+    }
+
+    /**Method that initializes the values of this panel
+     * 
+     * @param ldapNode LDAPNode. Used to set the base value
+     */
+    public void initProperties(LDAPNode ldapNode){
+        this.ldapNode=ldapNode;
+        DefaultComboBoxModel model = new DefaultComboBoxModel(SCOPES);
+        this.scopeComboBox.setModel(model);
+        this.baseTextField.setText(this.ldapNode.myDN);
+    }
+    
+    /**Method that checks the fileds of the search
+     * 
+     * @return String. It is returned a string with the found errors. 
+     * If no error is found then  it is returned an empty string ""
+     */
+    public String getErrorCheckingSearchFields(){
+        String error="";
+        if(this.baseTextField.getText().trim().equals("")){
+            error+="Error checking base."+"\n";
+        }
+        if(this.filterTextArea.getText().trim().equals("")){
+            error+="Error cheking filter."+"\n";
+        }
+        return error;
+    }
+
+    /**Method that set the defualt values in this panel
+     * 
+     */
+    void setDefaultValues() {
+        this.getSearchParamsFromPanel().setDefaultValues(); //We set the default values of a search
+        this.setSearchParamsFromPanel(this.getSearchParamsFromPanel()); //We set this values in this panel
+    }
+    
+    /**Method that sets the components of this panel as editable
+     * 
+     * @param editable Boolean. True- Editable, False- Not editable
+     */
+    public void setEditableComponents(boolean editable){
+        this.baseTextField.setEditable(editable);
+        this.scopeComboBox.setEditable(editable);
+        this.filterTextArea.setEditable(editable);
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        basePanel = new javax.swing.JPanel();
+        baseLabel = new javax.swing.JLabel();
+        baseTextField = new javax.swing.JTextField();
+        scopePanel = new javax.swing.JPanel();
+        scopeLabel = new javax.swing.JLabel();
+        scopeComboBox = new javax.swing.JComboBox();
+        filterPanel = new javax.swing.JPanel();
+        filterScrollPane = new javax.swing.JScrollPane();
+        filterTextArea = new javax.swing.JTextArea();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        basePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Base"));
+        basePanel.setLayout(new java.awt.GridBagLayout());
+
+        baseLabel.setText("Select the base to start searching from");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        basePanel.add(baseLabel, gridBagConstraints);
+
+        baseTextField.setText("dn to search");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        basePanel.add(baseTextField, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(basePanel, gridBagConstraints);
+
+        scopePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Scope"));
+        scopePanel.setLayout(new java.awt.GridBagLayout());
+
+        scopeLabel.setText("Select the scope");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        scopePanel.add(scopeLabel, gridBagConstraints);
+
+        scopeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        scopePanel.add(scopeComboBox, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(scopePanel, gridBagConstraints);
+
+        filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
+        filterPanel.setLayout(new java.awt.GridBagLayout());
+
+        filterTextArea.setColumns(20);
+        filterTextArea.setRows(5);
+        filterScrollPane.setViewportView(filterTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        filterPanel.add(filterScrollPane, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(filterPanel, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel baseLabel;
+    private javax.swing.JPanel basePanel;
+    private javax.swing.JTextField baseTextField;
+    private javax.swing.JPanel filterPanel;
+    private javax.swing.JScrollPane filterScrollPane;
+    private javax.swing.JTextArea filterTextArea;
+    private javax.swing.JComboBox scopeComboBox;
+    private javax.swing.JLabel scopeLabel;
+    private javax.swing.JPanel scopePanel;
+    // End of variables declaration//GEN-END:variables
+}

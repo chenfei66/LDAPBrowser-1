@@ -1,0 +1,363 @@
+package org.symlabs.browser.connection;
+
+import java.awt.Component;
+import javax.swing.DefaultComboBoxModel;
+import org.apache.log4j.Logger;
+import org.symlabs.browser.MessageDialog;
+import org.symlabs.store.ConnectionData;
+import org.symlabs.util.LDAPServer;
+import org.symlabs.util.Utils;
+
+/**
+ * <p>Titulo: ConnectionPanel </p>
+ * <p>Descripcion: Panel that contains a parameters needed to configurate an ldap connection. </p>
+ * <p>Copyright: Emilio Fernandez  2009</p>
+ * @author Emilio J. Fernandez Rey
+ * @version 1.0
+ * @id $Id: ConnectionPanel.java,v 1.5 2009-08-24 09:01:06 efernandez Exp $
+ */
+public class ConnectionPanel extends javax.swing.JPanel {
+
+    /**Attribute used to display the debug message*/
+    private static Logger logger = Logger.getLogger(ConnectionPanel.class);
+    /**Attribute that contains the component where this panel is displayed*/
+    private Component component;
+
+    /**Method that sets the component that contains this panel
+     * 
+     * @param component Component
+     */
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+    
+    /**Contructor: Creates new form ConnectionPanel
+     * 
+     */
+    public ConnectionPanel() {
+        initComponents();
+        //We set the version combo box model
+        if (this.versionComboBox != null && this.versionComboBox.getModel() != null) {
+            this.versionComboBox.setSelectedItem(LDAPServer.LDAP_DEFAULT_VERSION);
+        }
+        this.component=null;
+    }
+
+    /**Method that sets the suffixes as the model of the SuffixesComboBox, and sets the suffix as the selected item of the comboBox
+     * 
+     * @param suffixes String[]. These are the elements contained in the combo box
+     * @param suffix String. This is the comboBox selected item 
+     */
+    public void setSuffixesComboBoxModel(String[] suffixes, String suffix) {
+        DefaultComboBoxModel model = null;
+        if (suffixes != null) {
+            model = new DefaultComboBoxModel(suffixes);
+            boolean found = false;
+            //We check if the suffix is contained in the array suffixes
+            for (int i = 0; i < suffixes.length; i++) {
+                if (suffixes[i].equals(suffix)) {
+                    found = true;
+                    break;
+                }
+            }
+            //We set the model
+            this.suffixesComboBox.setModel(model);
+
+            //If the suffix given as argument is found inside the suffixes then we set as selected this item
+            if (found) {
+                this.suffixesComboBox.setSelectedItem(suffix);
+            } else {
+                model.setSelectedItem(suffix);
+            }
+        } else if (suffix != null && !suffix.equals("")) {
+            model = new DefaultComboBoxModel(new String[]{suffix});
+            //We set the model an set the selected item of the combobox
+            this.suffixesComboBox.setModel(model);
+            model.setSelectedItem(suffix);
+        }
+    }
+
+    /**Contructor: Creates new form ConnectionPanel
+     * @param host Stirng. This is the host of the ldap server
+     * @param port Stirng. This is the port of the ldap server
+     * @param authid String. This is the user identifier of the ldap server
+     * @param authpw String. This is the password of the user of the ldap server
+     * @param suffix String, This is the suffix where you want to connet
+     * @param indexLdapVersion int. This is the index of the ldap version used
+     * @param suffixes String[]. These are the naming contexts found in the ldap server
+     */
+    public ConnectionPanel(String host, String port, String authid, String authpw, String suffix, int indexLdapVersion, String[] suffixes) {
+        initComponents();
+        this.hostTextField.setText(host);
+        this.portTextField.setText(port);
+        this.userIdTextField.setText(authid);
+        this.userPwPasswordField.setText(authpw);
+        this.setSuffixesComboBoxModel(suffixes, suffix);
+        this.setIndexLdapVersion(indexLdapVersion);
+
+        //We set the version combo box model
+        if (this.versionComboBox != null && this.versionComboBox.getModel() != null) {
+            this.versionComboBox.setSelectedItem(LDAPServer.LDAP_DEFAULT_VERSION);
+        }
+        this.component=null;
+    }
+
+    /**Method which returns the suffix found in the suffixComboBox
+     * 
+     * @return String. This is the suffix written in the suffixComboBox
+     */
+    public String getSuffixFromComboBox() {
+        String suffix = null;
+        if (this.suffixesComboBox == null || this.suffixesComboBox.getSelectedItem() == null) {
+            suffix = "";
+        } else {
+            suffix = this.suffixesComboBox.getSelectedItem().toString();
+        }
+        return suffix;
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        hostLabel = new javax.swing.JLabel();
+        hostTextField = new javax.swing.JTextField();
+        portLabel = new javax.swing.JLabel();
+        portTextField = new javax.swing.JTextField();
+        userIdLabel = new javax.swing.JLabel();
+        userIdTextField = new javax.swing.JTextField();
+        userPwLabel = new javax.swing.JLabel();
+        userPwPasswordField = new javax.swing.JPasswordField();
+        suffixesButton = new javax.swing.JButton();
+        suffixesComboBox = new javax.swing.JComboBox();
+        versionLabel = new javax.swing.JLabel();
+        versionComboBox = new javax.swing.JComboBox();
+        showPasswordButton = new javax.swing.JButton();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        hostLabel.setText("Host:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(hostLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(hostTextField, gridBagConstraints);
+
+        portLabel.setText("Port:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(portLabel, gridBagConstraints);
+
+        portTextField.setText(String.valueOf(LDAPServer.LDAP_DEFAULT_PORT));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(portTextField, gridBagConstraints);
+
+        userIdLabel.setText("User id:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(userIdLabel, gridBagConstraints);
+
+        userIdTextField.setText("cn=dirmanager");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(userIdTextField, gridBagConstraints);
+
+        userPwLabel.setText("Password:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(userPwLabel, gridBagConstraints);
+
+        userPwPasswordField.setText("dirmanager");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(userPwPasswordField, gridBagConstraints);
+
+        suffixesButton.setText("Suffixes");
+        suffixesButton.setToolTipText("Load the suffixes");
+        suffixesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                suffixesButtonMouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(suffixesButton, gridBagConstraints);
+
+        suffixesComboBox.setEditable(true);
+        suffixesComboBox.setMinimumSize(new java.awt.Dimension(10, 27));
+        suffixesComboBox.setPreferredSize(new java.awt.Dimension(10, 27));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(suffixesComboBox, gridBagConstraints);
+
+        versionLabel.setText("Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(versionLabel, gridBagConstraints);
+
+        versionComboBox.setModel(new DefaultComboBoxModel(LDAPServer.LDAP_SUPPORTED_VERSIONS));
+        versionComboBox.setMinimumSize(new java.awt.Dimension(10, 27));
+        versionComboBox.setPreferredSize(new java.awt.Dimension(10, 27));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(versionComboBox, gridBagConstraints);
+
+        showPasswordButton.setText("Show password");
+        showPasswordButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                showPasswordButtonMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                showPasswordButtonMouseReleased(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 4);
+        add(showPasswordButton, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
+    private void suffixesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_suffixesButtonMouseClicked
+        if (this.suffixesButton.isEnabled()) {
+            String errorMessage = "";
+            String message = "";
+            String title = "Connection Error";
+            int typeMsg = MessageDialog.MESSAGE_ERROR;
+
+            LDAPServer con = null;
+            try {                
+                con = new LDAPServer(new ConnectionData(this.hostTextField.getText(), Integer.parseInt(this.portTextField.getText()),
+                        this.userIdTextField.getText(), new String(this.userPwPasswordField.getPassword()),
+                        this.versionComboBox.getSelectedIndex()),true);
+            } catch (Exception e) {
+                message = "Error loading suffixes." + "\n";
+                errorMessage = message + e.getMessage();
+                logger.error(message + errorMessage);
+            }
+
+            if (errorMessage.equals("")) {
+                try {
+                    this.suffixesComboBox.setModel(new DefaultComboBoxModel(con.getSuffixes()));
+                } catch (Exception e) {
+                    message = "Error loading suffixes." + "\n";
+                    errorMessage = message + e.getMessage();
+                    logger.error(errorMessage);
+                }
+            }
+
+            if(this.component==null){
+                this.component=this;
+            }
+            if (!message.equals("")) {
+                logger.error(errorMessage);
+                MessageDialog errorDialog = new MessageDialog(this.component,title, message, errorMessage, typeMsg);
+                errorDialog.setLocationRelativeTo(this);
+                errorDialog.setVisible(true);
+            } else {
+                title = "Information message";
+                message = "Suffix loaded correctly!";
+                MessageDialog errorDialog = new MessageDialog(this.component,title, message, MessageDialog.MESSAGE_INFORMATION);
+                errorDialog.setLocationRelativeTo(this);
+                errorDialog.setVisible(true);
+                logger.trace(message);
+            }
+        }
+    }//GEN-LAST:event_suffixesButtonMouseClicked
+
+    private void showPasswordButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showPasswordButtonMousePressed
+        if (this.showPasswordButton.isEnabled()) {
+            this.userPwPasswordField.setEchoChar('\0');
+        }
+    }//GEN-LAST:event_showPasswordButtonMousePressed
+
+    private void showPasswordButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showPasswordButtonMouseReleased
+        this.userPwPasswordField.setEchoChar('*');
+    }//GEN-LAST:event_showPasswordButtonMouseReleased
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel hostLabel;
+    public javax.swing.JTextField hostTextField;
+    private javax.swing.JLabel portLabel;
+    public javax.swing.JTextField portTextField;
+    public javax.swing.JButton showPasswordButton;
+    public javax.swing.JButton suffixesButton;
+    public javax.swing.JComboBox suffixesComboBox;
+    private javax.swing.JLabel userIdLabel;
+    public javax.swing.JTextField userIdTextField;
+    private javax.swing.JLabel userPwLabel;
+    public javax.swing.JPasswordField userPwPasswordField;
+    public javax.swing.JComboBox versionComboBox;
+    private javax.swing.JLabel versionLabel;
+    // End of variables declaration//GEN-END:variables
+
+    /**Method that sets the index ldap Version
+     * 
+     * @param indexLdapVersion int. This is the index ldap version
+     */
+    private void setIndexLdapVersion(int indexLdapVersion) {
+        if(indexLdapVersion>=0 && indexLdapVersion<LDAPServer.LDAP_SUPPORTED_VERSIONS.length){
+            this.versionComboBox.setSelectedIndex(indexLdapVersion);
+        }
+    }
+}
